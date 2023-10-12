@@ -1,0 +1,22 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class category extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'category'
+    ];
+
+
+    
+    public function product () {
+        return $this->belongsToMany(Product::class, 'category_product', 'category_id', 'product_id');
+    }
+
+}
