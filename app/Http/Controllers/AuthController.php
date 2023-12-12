@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
+use App\Models\Interest;
 
 
 class AuthController extends Controller
@@ -57,7 +58,7 @@ class AuthController extends Controller
             'success' => true
         ];
 
-        return response($response, 201);
+        return response($response, 200);
 
 
     }
@@ -66,13 +67,13 @@ class AuthController extends Controller
         $fields = Validator::make($request->all(),[
             'firstname'=> 'required|string',
             'surname'=> 'required|string',
-            'state'=> 'required|string',
-            'country'=> 'required|string',
+            // 'state'=> 'required|string',
+            // 'country'=> 'required|string',
             'number'=> 'required|string',
-            'dob'=> 'required|string',
+            // 'dob'=> 'required|string',
             'email'=> 'required|string|unique:users,email',
             'password'=> 'required|string|min:8|confirmed',
-            'admin'=> 'required'
+            // 'admin'=> 'required'
             // 'location'=>'nullable|string',
             // 'question'=> 'required|string',
             // 'answer'=> 'required|string',
@@ -91,9 +92,9 @@ class AuthController extends Controller
             'firstname'=> $request['firstname'],
             'surname'=> $request['surname'],
             'state'=> $request['state'],
-            'country'=> $request['country'],
+            'lga'=> $request['lga'],
             'number'=> $request['number'],
-            'dob'=> $request['dob'],
+            // 'dob'=> $request['dob'],
             'admin'=> $request['admin'],
             'email'=> $request['email'],
             'password' => bcrypt($request['password']),
@@ -108,6 +109,110 @@ class AuthController extends Controller
         // Mail::to($user->email)->send(new MyCustomMail($data));
 
         return response($response);
+
+    }
+
+    public function updateAdmin (Request $request) {
+        $fields = Validator::make($request->all(),[
+            'email'=> 'required|string',
+            'admin'=>'required'
+        ]);
+
+        $user = User::where('email', $request['email'])->get()->first();
+
+        $user->update([
+            'admin'=> $request['admin']
+        ]);
+
+        
+        
+        $response = [
+            'user'=> $user,
+            'message'=> 'userInfo retrieved',
+            'success' => true
+        ];
+
+        return response($response);
+    }
+
+
+    
+    public function updateNotification (Request $request) {
+        $fields = Validator::make($request->all(),[
+            'email'=> 'required|string',
+            'notification'=>'required'
+        ]);
+
+        $user = User::where('email', $request['email'])->get()->first();
+
+        $user->update([
+            'notification'=> $request['notification']
+        ]);
+
+        
+        
+        $response = [
+            'user'=> $user,
+            'message'=> 'userInfo retrieved',
+            'success' => true
+        ];
+
+        return response($response);
+    }
+
+    
+    public function updateState (Request $request) {
+        $fields = Validator::make($request->all(),[
+            'email'=> 'required|string',
+            'state'=>'required',
+            'lga'=>'required',
+        ]);
+
+        $user = User::where('email', $request['email'])->get()->first();
+
+        $user->update([
+            'state'=> $request['state'],
+            'lga'=> $request['lga'],
+        ]);
+
+        
+        $response = [
+            'user'=> $user,
+            'message'=> 'userInfo retrieved',
+            'success' => true
+        ];
+
+        return response($response);
+    }
+
+
+    public function userInterest (Request $request) {
+        $fields = Validator::make($request->all(),[
+            'email'=> 'required|string',
+            'category'=> 'required',
+        ]);
+
+        $user = User::where('email', $request['email'])->get()->first();
+
+        $interest = Interest::create([
+            'user_id'=> $user->id,
+            'category'=> $request['category'],
+        ]);
+
+        
+        $token = $user->createToken('myToken')->plainTextToken;
+        
+        $allUserInterest = Interest::where('user_id', $user->id)->get();
+        
+        $response = [
+            'user'=> $user,
+            'token'=> $token,
+            'interest'=> $allUserInterest,
+            'message'=> 'user interest successful',
+            'success' => true
+        ];
+
+        return response($response, 201);
 
     }
 

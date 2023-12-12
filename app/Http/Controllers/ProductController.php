@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\User;
+use App\Models\category;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
@@ -31,6 +32,36 @@ class ProductController extends Controller
         ];
 
         return response($response);
+    }
+
+    public function getUserInterestProducts () {
+        $id = Auth()->user()->id;
+        $user = User::where('id', $id)->with(['interest'])->get()->first();
+        $product = Product::with(['category', 'comment'])->get();
+
+        $newCat = [];
+
+        foreach($user->interest as $category) {
+            $category = category::with(['product'])->where('category', $category->category)->get();
+
+            if(count($category) !== 0) {
+                // $newCat[$category->category] = $category;
+                $newCat[] = [
+                    'category' => $category,
+                ];
+            }
+
+        }
+        
+        $response = [
+            // 'user'=> $user,
+            // 'product'=> $product,
+            'cat'=> $newCat,
+            'message'=> "product retrieved",
+            'success' => true
+        ];
+        return response($response);
+
     }
 
 
@@ -81,6 +112,7 @@ class ProductController extends Controller
             $file->save();
             
             $response = [
+                'id'=> $file->id,
                 'path'=>$file->file_path,
                 'product_name'=> $file->product_name,
                 'price'=> $file->price,

@@ -21,8 +21,8 @@ class User extends Authenticatable
         'firstname',
         'surname',
         'state',
-        'country',
-        'dob',
+        'lga',
+        'notification',
         'number',
         'admin',
         'email',
@@ -55,6 +55,11 @@ class User extends Authenticatable
     
     public function comment () {
         return $this->hasMany(comment::class, 'user_id', 'id');
+    }
+
+    
+    public function interest () {
+        return $this->hasMany(Interest::class, 'user_id', 'id');
     }
 
 

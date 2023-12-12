@@ -24,7 +24,14 @@ use Illuminate\Support\Facades\Response;
 
 Route::post('/register', [AuthController::class, 'Register']);
 Route::post('/login', [AuthController::class, 'Login']);
+Route::put('/updateAdmin', [AuthController::class, 'updateAdmin']);
+Route::put('/updateNotification', [AuthController::class, 'updateNotification']);
+Route::put('/updateState', [AuthController::class, 'updateState']);
+Route::post('/userInterest', [AuthController::class, 'userInterest']);
 
+// checkEmail
+// updateState
+// 
 
 
 Route::get('imgs/{filename}', function ($filename) {
@@ -46,6 +53,9 @@ Route::get('imgs/{filename}', function ($filename) {
 
 Route::group(['middleware'=> ['auth:sanctum']], function () {
     Route::post('/createProduct', [ProductController::class, 'store']);
+    Route::get('/getUserInterestProducts', [ProductController::class, 'getUserInterestProducts']);
+
+    
     Route::post('/productCategory', [CategoryController::class, 'store']);
     Route::post('/productComment', [CommentController::class, 'store']);
     Route::post('/addCart', [CartController::class, 'store']);
@@ -57,6 +67,8 @@ Route::group(['middleware'=> ['auth:sanctum']], function () {
     Route::put('/updatePaid/{cartId}', [CartController::class, 'updatePaid']);
 
     
+    // checkEmail
+
     // getAllPaid
     Route::post('/logout', [AuthController::class, 'Logout']);
 });
