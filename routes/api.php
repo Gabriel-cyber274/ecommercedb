@@ -54,11 +54,26 @@ Route::get('imgs/{filename}', function ($filename) {
 Route::group(['middleware'=> ['auth:sanctum']], function () {
     Route::post('/createProduct', [ProductController::class, 'store']);
     Route::get('/getUserInterestProducts', [ProductController::class, 'getUserInterestProducts']);
+    Route::get('/getAllUserProduct', [ProductController::class, 'getAllUserProduct']);
+    Route::get('/adminShowRoom', [ProductController::class, 'adminShowRoom']);
+    Route::post('/addProductTags', [ProductController::class, 'addProductTags']);
+
+
+    // 
+
+
 
     
     Route::post('/productCategory', [CategoryController::class, 'store']);
     Route::post('/productComment', [CommentController::class, 'store']);
     Route::post('/addCart', [CartController::class, 'store']);
+    Route::get('/getPendingOrder', [CartController::class, 'getPendingOrder']);
+    Route::get('/getCompletedOrder', [CartController::class, 'getCompletedOrder']);
+    Route::put('/completeOrder/{orderId}', [CartController::class, 'completeOrder']);
+
+    // completeOrder
+    // getCompletedOrder
+
     Route::get('/getComment/{productid}', [CommentController::class, 'getComment']);
     Route::get('/getCart', [CartController::class, 'getCart']);
     Route::get('/getAllPaid', [CartController::class, 'getAllPaid']);

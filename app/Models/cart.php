@@ -16,7 +16,7 @@ class cart extends Model
     ];
 
 
-    protected $cast = [
+    protected $casts = [
         'user_id'=> 'integer',
         'number'=> 'integer',
         'paid'=> 'boolean'
@@ -28,6 +28,10 @@ class cart extends Model
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
+    
+    public function order () {
+        return $this->belongsToMany(Order::class, 'cart_order', 'cart_id', 'order_id');
+    }
 
     public function product () {
         return $this->belongsToMany(Product::class, 'cart_product', 'cart_id', 'product_id');

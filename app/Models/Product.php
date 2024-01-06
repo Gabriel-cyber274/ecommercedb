@@ -12,18 +12,29 @@ class Product extends Model
 
     protected $fillable = [
         'name',
+        'user_id',
         'file_path',
         'price',
         'product_name',
         'discount_price',
         'discount_percentage',
-        'instock'
+        'instock',
+        'description',
+        'size',
+        'color',
+        'pieces',
+        'carton',
+        'featured'
+
     ];
+
+    
 
 
     
     protected $casts = [
-        'instock'=> 'boolean'
+        'instock'=> 'boolean',
+        'featured' =>'boolean'
     ];
 
 
@@ -32,10 +43,19 @@ class Product extends Model
         return $this->belongsToMany(category::class, 'category_product', 'product_id', 'category_id');
     }
 
+    
+    public function user () {
+        return $this->belongsTo(User::class, 'user_id', 'id');
+    }
 
     
     public function comment () {
         return $this->belongsToMany(comment::class, 'comment_product', 'product_id', 'comment_id');
+    }
+
+    
+    public function tags () {
+        return $this->belongsToMany(tags::class, 'product_tags', 'product_id', 'tag_id');
     }
 
     
